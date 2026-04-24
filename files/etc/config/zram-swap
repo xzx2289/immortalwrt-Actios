@@ -1,0 +1,5 @@
+config zram-swap
+	option enabled 1
+	option mm_max_used '60'
+	option zram_size_mb '256'
+	option comp_algo 'lzo-rle'
