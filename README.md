@@ -8,7 +8,7 @@
 - 支持自定义输入插件包，驱动包，主题包，python包，perl包，lib包，等等。
 ---
 
-## 编译升级固件步骤
+## 编译固件步骤 - 不用拉取这个仓库一样能编译
 
 1. [**Actions**](https://github.com/x7780/immortalwrt-Actios/actions) → **Build_imm_高通410系列** → **Run workflow** → 选择设备型号 → 填写需要插件包 → Run workflow 开始编译
 ![编译教程](img/1.png)
