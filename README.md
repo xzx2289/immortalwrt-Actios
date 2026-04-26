@@ -22,10 +22,10 @@
 4. **Releases** → 找到你编译的对应版本 → 下载你编译的版本（OpenWrt_xxx_xxx_刷机包.zip 解压即刷）
 ![下载固件包](img/3.png)
 
-5. 如果你原本系统是linux或这opnewrt系统，就可以按照下面步骤升级就行。
+5. 如果你原本系统是linux或opnewrt系统，就可以按照下面步骤升级就行。
 ![升级固件](img/4.png)
 
-如果你设备重来没刷过linux或者openwrt，还是原版安卓，就按下面教程刷入，注意必须备份分区。
+如果你设备没刷过linux或者openwrt，还是原版安卓，就按下面教程刷入，注意必须备份分区。
 ![安卓刷入openwrt固件](img/5.png)
 
 ---
@@ -104,6 +104,10 @@
 
 ---
 
+## 特别感谢
+
+- [xuxin1955/Actions-immortalwrt](https://github.com/xuxin1955/Actions-immortalwrt) 感谢作者提供技术思路
+
 ## Credits
 
 - [Microsoft Azure](https://azure.microsoft.com)
@@ -116,6 +120,8 @@
 - [Mattraks/delete-workflow-runs](https://github.com/Mattraks/delete-workflow-runs)
 - [dev-drprasad/delete-older-releases](https://github.com/dev-drprasad/delete-older-releases)
 - [peter-evans/repository-dispatch](https://github.com/peter-evans/repository-dispatch)
+
+
 
 ## License
 
