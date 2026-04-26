@@ -106,7 +106,7 @@
 
 ## 特别感谢
 
-- [xuxin1955/Actions-immortalwrt](https://github.com/xuxin1955/Actions-immortalwrt) 感谢作者提供技术思路
+- [xuxin1955/Actions-immortalwrt](https://github.com/xuxin1955/Actions-immortalwrt) 感谢作者提供技术
 
 ## Credits
 
