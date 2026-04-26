@@ -38,7 +38,7 @@ on:
         type: string
 
 env:
-  REPO_URL: https://github.com/xuxin1955/immortalwrt
+  REPO_URL: https://github.com/lkiuyu/immortalwrt
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: ${{ format('config/{0}.config', github.event.inputs.profile) }}
