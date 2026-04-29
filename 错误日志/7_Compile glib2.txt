@@ -1,0 +1,47 @@
+﻿2026-04-29T04:49:59.7293836Z ##[group]Run cd openwrt
+2026-04-29T04:49:59.7294274Z [36;1mcd openwrt[0m
+2026-04-29T04:49:59.7294648Z [36;1mecho "===== 开始编译 glib2 ====="[0m
+2026-04-29T04:49:59.7295406Z [36;1mmake package/feeds/packages/glib2/compile V=s -j1 2>&1 | tee /tmp/glib2_build.log[0m
+2026-04-29T04:49:59.7296201Z [36;1mecho "===== glib2 编译结束 ====="[0m
+2026-04-29T04:49:59.7327425Z shell: /usr/bin/bash -e {0}
+2026-04-29T04:49:59.7327837Z env:
+2026-04-29T04:49:59.7328239Z   REPO_URL: https://github.com/lkiuyu/immortalwrt
+2026-04-29T04:49:59.7329085Z   REPO_BRANCH: master
+2026-04-29T04:49:59.7329454Z   TZ: Asia/Shanghai
+2026-04-29T04:49:59.7329792Z ##[endgroup]
+2026-04-29T04:49:59.7382169Z ===== 开始编译 glib2 =====
+2026-04-29T04:50:09.4805837Z WARNING: Makefile 'package/feeds/packages/onionshare-cli/Makefile' has a dependency on 'python3-pysocks', which does not exist
+2026-04-29T04:50:09.4807557Z WARNING: Makefile 'package/feeds/packages/onionshare-cli/Makefile' has a dependency on 'python3-unidecode', which does not exist
+2026-04-29T04:50:11.0056206Z make[2]: Entering directory '/mnt/openwrt/scripts/config'
+2026-04-29T04:50:11.0056851Z make[2]: 'conf' is up to date.
+2026-04-29T04:50:11.0057398Z make[2]: Leaving directory '/mnt/openwrt/scripts/config'
+2026-04-29T04:50:14.0762581Z time: target/linux/prereq#0.09#0.06#0.14
+2026-04-29T04:50:15.9575221Z make[1]: Entering directory '/mnt/openwrt'
+2026-04-29T04:50:18.1619683Z + mkdir -p /mnt/openwrt/staging_dir/target-aarch64_generic_musl
+2026-04-29T04:50:18.1630684Z + cd /mnt/openwrt/staging_dir/target-aarch64_generic_musl
+2026-04-29T04:50:18.1631246Z + mkdir -p bin lib stamp usr/include usr/lib
+2026-04-29T04:50:18.1642946Z mkdir -p /mnt/openwrt/build_dir/target-aarch64_generic_musl/stamp
+2026-04-29T04:50:18.1665449Z touch /mnt/openwrt/staging_dir/target-aarch64_generic_musl/.prepared
+2026-04-29T04:50:18.1685867Z mkdir -p /mnt/openwrt/bin/targets/msm89xx/msm8916
+2026-04-29T04:50:18.1813192Z make[2]: Entering directory '/mnt/openwrt/package/utils/lua'
+2026-04-29T04:50:18.3674521Z mkdir -p /mnt/openwrt/dl
+2026-04-29T04:50:18.3705773Z /mnt/openwrt/scripts/download.pl "/mnt/openwrt/dl" "lua-5.1.5.tar.gz" "2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333" "" "https://www.lua.org/ftp/" "https://www.tecgraf.puc-rio.br/lua/ftp/"    
+2026-04-29T04:50:18.4102806Z + curl -f --connect-timeout 5 --retry 3 --location https://www.lua.org/ftp/lua-5.1.5.tar.gz
+2026-04-29T04:50:18.4150456Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2026-04-29T04:50:18.4151244Z                                  Dload  Upload   Total   Spent    Left  Speed
+2026-04-29T04:50:18.4160689Z 
+2026-04-29T04:50:19.4627139Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-04-29T04:50:19.4634364Z  81  216k   81  175k    0     0   167k      0  0:00:01  0:00:01 --:--:--  167k
+2026-04-29T04:50:19.4634942Z 100  216k  100  216k    0     0   206k      0  0:00:01  0:00:01 --:--:--  206k
+2026-04-29T04:50:19.4748299Z . /mnt/openwrt/include/shell.sh; /mnt/openwrt/staging_dir/host/bin/libdeflate-gzip -dc /mnt/openwrt/dl/lua-5.1.5.tar.gz | tar -C /mnt/openwrt/build_dir/hostpkg/lua-5.1.5/.. -xf -
+2026-04-29T04:50:19.4764435Z bash: line 1: /mnt/openwrt/staging_dir/host/bin/libdeflate-gzip: No such file or directory
+2026-04-29T04:50:19.4774017Z tar: This does not look like a tar archive
+2026-04-29T04:50:19.4774503Z tar: Exiting with failure status due to previous errors
+2026-04-29T04:50:19.4778136Z make[2]: *** [Makefile:191: /mnt/openwrt/build_dir/hostpkg/lua-5.1.5/.preparedccc91b931b8b7dfd981268817ca22963_6664517399ebbbc92a37c5bb081b5c53] Error 2
+2026-04-29T04:50:19.4779357Z make[2]: Leaving directory '/mnt/openwrt/package/utils/lua'
+2026-04-29T04:50:19.4784634Z time: package/utils/lua/host-compile#0.16#0.15#1.30
+2026-04-29T04:50:19.4791211Z     ERROR: package/utils/lua [host] failed to build.
+2026-04-29T04:50:19.4794943Z make[1]: *** [package/Makefile:186: package/utils/lua/host/compile] Error 1
+2026-04-29T04:50:19.4804970Z make[1]: Leaving directory '/mnt/openwrt'
+2026-04-29T04:50:19.4834947Z make: *** [/mnt/openwrt/include/toplevel.mk:233: package/feeds/packages/glib2/compile] Error 2
+2026-04-29T04:50:19.4838972Z ===== glib2 编译结束 =====

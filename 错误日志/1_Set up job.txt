@@ -1,0 +1,46 @@
+﻿2026-04-29T04:45:03.8208265Z Current runner version: '2.334.0'
+2026-04-29T04:45:03.8233234Z ##[group]Runner Image Provisioner
+2026-04-29T04:45:03.8234211Z Hosted Compute Agent
+2026-04-29T04:45:03.8234711Z Version: 20260213.493
+2026-04-29T04:45:03.8235367Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+2026-04-29T04:45:03.8236062Z Build Date: 2026-02-13T00:28:41Z
+2026-04-29T04:45:03.8236723Z Worker ID: {1e7e03e4-74e4-4e87-9472-7795c92330cc}
+2026-04-29T04:45:03.8237395Z Azure Region: northcentralus
+2026-04-29T04:45:03.8237963Z ##[endgroup]
+2026-04-29T04:45:03.8239616Z ##[group]Operating System
+2026-04-29T04:45:03.8240199Z Ubuntu
+2026-04-29T04:45:03.8240759Z 24.04.4
+2026-04-29T04:45:03.8241192Z LTS
+2026-04-29T04:45:03.8241647Z ##[endgroup]
+2026-04-29T04:45:03.8242087Z ##[group]Runner Image
+2026-04-29T04:45:03.8242676Z Image: ubuntu-24.04
+2026-04-29T04:45:03.8243222Z Version: 20260413.86.1
+2026-04-29T04:45:03.8244142Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260413.86/images/ubuntu/Ubuntu2404-Readme.md
+2026-04-29T04:45:03.8245830Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260413.86
+2026-04-29T04:45:03.8246750Z ##[endgroup]
+2026-04-29T04:45:03.8249855Z ##[group]GITHUB_TOKEN Permissions
+2026-04-29T04:45:03.8252115Z Actions: write
+2026-04-29T04:45:03.8252741Z ArtifactMetadata: write
+2026-04-29T04:45:03.8253298Z Attestations: write
+2026-04-29T04:45:03.8253795Z Checks: write
+2026-04-29T04:45:03.8254305Z Contents: write
+2026-04-29T04:45:03.8254837Z Deployments: write
+2026-04-29T04:45:03.8255306Z Discussions: write
+2026-04-29T04:45:03.8255853Z Issues: write
+2026-04-29T04:45:03.8256301Z Metadata: read
+2026-04-29T04:45:03.8256791Z Models: read
+2026-04-29T04:45:03.8257271Z Packages: write
+2026-04-29T04:45:03.8257793Z Pages: write
+2026-04-29T04:45:03.8258392Z PullRequests: write
+2026-04-29T04:45:03.8259162Z RepositoryProjects: write
+2026-04-29T04:45:03.8259745Z SecurityEvents: write
+2026-04-29T04:45:03.8260230Z Statuses: write
+2026-04-29T04:45:03.8260767Z VulnerabilityAlerts: read
+2026-04-29T04:45:03.8261312Z ##[endgroup]
+2026-04-29T04:45:03.8263358Z Secret source: Actions
+2026-04-29T04:45:03.8264396Z Prepare workflow directory
+2026-04-29T04:45:03.8814872Z Prepare all required actions
+2026-04-29T04:45:03.8851470Z Getting action download info
+2026-04-29T04:45:04.2311778Z Download action repository 'actions/checkout@main' (SHA:0c366fd6a839edf440554fa01a7085ccba70ac98)
+2026-04-29T04:45:04.3984504Z Download action repository 'actions/upload-artifact@main' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-04-29T04:45:05.0096222Z Complete job name: debug

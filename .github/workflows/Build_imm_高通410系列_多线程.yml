@@ -164,6 +164,7 @@ jobs:
         working-directory: openwrt
         run: |
           echo -e "$(nproc) thread compile"
+          make package/feeds/packages/glib2/compile -j$(nproc) V=s
           make -j$(nproc) || make -j1 V=s
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
           [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
@@ -173,6 +174,7 @@ jobs:
         if: ${{inputs.multithreading == false}}
         working-directory: openwrt
         run: |
+          make package/feeds/packages/glib2/compile -j1 V=s
           make -j1 V=s
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
           [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV

@@ -1,0 +1,11 @@
+﻿2026-04-29T04:47:49.7564731Z ##[group]Run sudo chmod 777 /mnt
+2026-04-29T04:47:49.7565042Z [36;1msudo chmod 777 /mnt[0m
+2026-04-29T04:47:49.7565329Z [36;1mgit clone $REPO_URL -b $REPO_BRANCH /mnt/openwrt[0m
+2026-04-29T04:47:49.7565703Z [36;1mln -sf /mnt/openwrt $GITHUB_WORKSPACE/openwrt[0m
+2026-04-29T04:47:49.7587069Z shell: /usr/bin/bash -e {0}
+2026-04-29T04:47:49.7587302Z env:
+2026-04-29T04:47:49.7587528Z   REPO_URL: https://github.com/lkiuyu/immortalwrt
+2026-04-29T04:47:49.7587832Z   REPO_BRANCH: master
+2026-04-29T04:47:49.7588028Z   TZ: Asia/Shanghai
+2026-04-29T04:47:49.7588206Z ##[endgroup]
+2026-04-29T04:47:49.7706929Z Cloning into '/mnt/openwrt'...

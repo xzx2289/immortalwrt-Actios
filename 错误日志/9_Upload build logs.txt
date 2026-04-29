@@ -1,0 +1,30 @@
+﻿2026-04-29T04:50:33.7035365Z ##[group]Run actions/upload-artifact@main
+2026-04-29T04:50:33.7035657Z with:
+2026-04-29T04:50:33.7035825Z   name: debug-logs
+2026-04-29T04:50:33.7036065Z   path: /tmp/glib2_build.log
+/tmp/libmbim_build.log
+
+2026-04-29T04:50:33.7036355Z   if-no-files-found: warn
+2026-04-29T04:50:33.7036574Z   compression-level: 6
+2026-04-29T04:50:33.7036773Z   overwrite: false
+2026-04-29T04:50:33.7036963Z   include-hidden-files: false
+2026-04-29T04:50:33.7037195Z   archive: true
+2026-04-29T04:50:33.7037360Z env:
+2026-04-29T04:50:33.7037575Z   REPO_URL: https://github.com/lkiuyu/immortalwrt
+2026-04-29T04:50:33.7037845Z   REPO_BRANCH: master
+2026-04-29T04:50:33.7038051Z   TZ: Asia/Shanghai
+2026-04-29T04:50:33.7038232Z ##[endgroup]
+2026-04-29T04:50:33.8409008Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-04-29T04:50:33.8411067Z The least common ancestor is /tmp. This will be the root directory of the artifact
+2026-04-29T04:50:33.8411891Z With the provided path, there will be 2 files uploaded
+2026-04-29T04:50:33.8416483Z Artifact name is valid!
+2026-04-29T04:50:33.8417149Z Root directory input is valid!
+2026-04-29T04:50:33.9702041Z Uploading artifact: debug-logs.zip
+2026-04-29T04:50:33.9745451Z Beginning upload of artifact content to blob storage
+2026-04-29T04:50:34.1028707Z Uploaded bytes 1888
+2026-04-29T04:50:34.1329965Z Finished uploading artifact content to blob storage!
+2026-04-29T04:50:34.1331238Z SHA256 digest of uploaded artifact is 150fdafc730a89cf5ed770d9ac02c3338469f352b118be50d086c28d76fc90b5
+2026-04-29T04:50:34.1332687Z Finalizing artifact upload
+2026-04-29T04:50:34.3047475Z Artifact debug-logs successfully finalized. Artifact ID 6699891641
+2026-04-29T04:50:34.3048288Z Artifact debug-logs has been successfully uploaded! Final size is 1888 bytes. Artifact ID is 6699891641
+2026-04-29T04:50:34.3052108Z Artifact download URL: https://github.com/x7780/immortalwrt-Actios/actions/runs/25091367494/artifacts/6699891641

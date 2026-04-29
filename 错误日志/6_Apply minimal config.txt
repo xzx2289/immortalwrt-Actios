@@ -1,0 +1,22 @@
+﻿2026-04-29T04:49:29.6837694Z ##[group]Run cd openwrt
+2026-04-29T04:49:29.6837979Z [36;1mcd openwrt[0m
+2026-04-29T04:49:29.6838187Z [36;1mprintf '%s\n' \[0m
+2026-04-29T04:49:29.6838422Z [36;1m  'CONFIG_TARGET_msm89xx=y' \[0m
+2026-04-29T04:49:29.6839039Z [36;1m  'CONFIG_TARGET_msm89xx_msm8916=y' \[0m
+2026-04-29T04:49:29.6839398Z [36;1m  'CONFIG_TARGET_msm89xx_msm8916_DEVICE_openstick-ufi103s=y' \[0m
+2026-04-29T04:49:29.6839752Z [36;1m  'CONFIG_PACKAGE_glib2=y' \[0m
+2026-04-29T04:49:29.6840004Z [36;1m  'CONFIG_PACKAGE_libmbim=y' \[0m
+2026-04-29T04:49:29.6840236Z [36;1m  > .config[0m
+2026-04-29T04:49:29.6840428Z [36;1mmake defconfig[0m
+2026-04-29T04:49:29.6861330Z shell: /usr/bin/bash -e {0}
+2026-04-29T04:49:29.6861558Z env:
+2026-04-29T04:49:29.6861780Z   REPO_URL: https://github.com/lkiuyu/immortalwrt
+2026-04-29T04:49:29.6862070Z   REPO_BRANCH: master
+2026-04-29T04:49:29.6862280Z   TZ: Asia/Shanghai
+2026-04-29T04:49:29.6862459Z ##[endgroup]
+2026-04-29T04:49:53.2785986Z 
+2026-04-29T04:49:56.3517790Z WARNING: Makefile 'package/feeds/packages/onionshare-cli/Makefile' has a dependency on 'python3-pysocks', which does not exist
+2026-04-29T04:49:56.3519777Z WARNING: Makefile 'package/feeds/packages/onionshare-cli/Makefile' has a dependency on 'python3-unidecode', which does not exist
+2026-04-29T04:49:59.7133798Z #
+2026-04-29T04:49:59.7134144Z # configuration written to .config
+2026-04-29T04:49:59.7134471Z #

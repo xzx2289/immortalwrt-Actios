@@ -1,0 +1,36 @@
+﻿2026-04-29T04:50:19.4870801Z ##[group]Run cd openwrt
+2026-04-29T04:50:19.4871086Z [36;1mcd openwrt[0m
+2026-04-29T04:50:19.4871304Z [36;1mecho "===== 开始编译 libmbim ====="[0m
+2026-04-29T04:50:19.4871761Z [36;1mmake package/feeds/packages/libmbim/compile V=s -j1 2>&1 | tee /tmp/libmbim_build.log[0m
+2026-04-29T04:50:19.4872222Z [36;1mecho "===== libmbim 编译结束 ====="[0m
+2026-04-29T04:50:19.4893390Z shell: /usr/bin/bash -e {0}
+2026-04-29T04:50:19.4893626Z env:
+2026-04-29T04:50:19.4893849Z   REPO_URL: https://github.com/lkiuyu/immortalwrt
+2026-04-29T04:50:19.4894161Z   REPO_BRANCH: master
+2026-04-29T04:50:19.4894351Z   TZ: Asia/Shanghai
+2026-04-29T04:50:19.4894538Z ##[endgroup]
+2026-04-29T04:50:19.4934169Z ===== 开始编译 libmbim =====
+2026-04-29T04:50:27.0270389Z WARNING: Makefile 'package/feeds/packages/onionshare-cli/Makefile' has a dependency on 'python3-pysocks', which does not exist
+2026-04-29T04:50:27.0272258Z WARNING: Makefile 'package/feeds/packages/onionshare-cli/Makefile' has a dependency on 'python3-unidecode', which does not exist
+2026-04-29T04:50:28.5696727Z make[2]: Entering directory '/mnt/openwrt/scripts/config'
+2026-04-29T04:50:28.5697385Z make[2]: 'conf' is up to date.
+2026-04-29T04:50:28.5697880Z make[2]: Leaving directory '/mnt/openwrt/scripts/config'
+2026-04-29T04:50:31.2703747Z make[1]: Entering directory '/mnt/openwrt'
+2026-04-29T04:50:33.4805513Z + mkdir -p /mnt/openwrt/staging_dir/target-aarch64_generic_musl
+2026-04-29T04:50:33.4815586Z + cd /mnt/openwrt/staging_dir/target-aarch64_generic_musl
+2026-04-29T04:50:33.4816190Z + mkdir -p bin lib stamp usr/include usr/lib
+2026-04-29T04:50:33.4826490Z mkdir -p /mnt/openwrt/build_dir/target-aarch64_generic_musl/stamp
+2026-04-29T04:50:33.4847987Z touch /mnt/openwrt/staging_dir/target-aarch64_generic_musl/.prepared
+2026-04-29T04:50:33.4969017Z make[2]: Entering directory '/mnt/openwrt/package/utils/lua'
+2026-04-29T04:50:33.6886302Z . /mnt/openwrt/include/shell.sh; /mnt/openwrt/staging_dir/host/bin/libdeflate-gzip -dc /mnt/openwrt/dl/lua-5.1.5.tar.gz | tar -C /mnt/openwrt/build_dir/hostpkg/lua-5.1.5/.. -xf -
+2026-04-29T04:50:33.6900949Z bash: line 1: /mnt/openwrt/staging_dir/host/bin/libdeflate-gzip: No such file or directory
+2026-04-29T04:50:33.6910440Z tar: This does not look like a tar archive
+2026-04-29T04:50:33.6911046Z tar: Exiting with failure status due to previous errors
+2026-04-29T04:50:33.6914525Z make[2]: *** [Makefile:191: /mnt/openwrt/build_dir/hostpkg/lua-5.1.5/.preparedccc91b931b8b7dfd981268817ca22963_6664517399ebbbc92a37c5bb081b5c53] Error 2
+2026-04-29T04:50:33.6915698Z make[2]: Leaving directory '/mnt/openwrt/package/utils/lua'
+2026-04-29T04:50:33.6921733Z time: package/utils/lua/host-compile#0.12#0.11#0.20
+2026-04-29T04:50:33.6928421Z     ERROR: package/utils/lua [host] failed to build.
+2026-04-29T04:50:33.6932283Z make[1]: *** [package/Makefile:186: package/utils/lua/host/compile] Error 1
+2026-04-29T04:50:33.6942219Z make[1]: Leaving directory '/mnt/openwrt'
+2026-04-29T04:50:33.6972734Z make: *** [/mnt/openwrt/include/toplevel.mk:233: package/feeds/packages/libmbim/compile] Error 2
+2026-04-29T04:50:33.6976424Z ===== libmbim 编译结束 =====
