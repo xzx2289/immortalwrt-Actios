@@ -160,11 +160,12 @@ jobs:
         if: steps.check.outputs.need_verify == 'true' && steps.build.outputs.status == 'success'
         run: |
           NEW_HASH="${{ steps.upstream.outputs.latest_hash }}"
-          echo "$NEW_HASH" > upstream_lock.txt
-          echo "$(date '+%Y-%m-%d') $NEW_HASH" >> upstream_history.txt
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
+          git fetch origin main
+          git reset --hard origin/main
+          echo "$NEW_HASH" > upstream_lock.txt
+          echo "$(date '+%Y-%m-%d') $NEW_HASH" >> upstream_history.txt
           git add upstream_lock.txt upstream_history.txt
           git commit -m "🔒 更新上游锁定 hash: ${NEW_HASH:0:7} [skip ci]"
           git push

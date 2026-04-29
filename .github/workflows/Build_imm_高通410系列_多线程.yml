@@ -133,7 +133,15 @@ jobs:
 
       - name: 更新并下载 feeds (Update and download feeds)
         working-directory: openwrt
-        run: ./scripts/feeds update -a && ./scripts/feeds install -a
+        run: ./scripts/feeds update -a
+
+      - name: 删除冲突包 (Remove conflicting packages)
+        run: |
+          rm -rf openwrt/feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
+
+      - name: 安装 feeds (Install feeds)
+        working-directory: openwrt
+        run: ./scripts/feeds install -a -f
 
       - name: 运行 diy-part2.sh (Run diy-part2.sh)
         run: |
