@@ -1,7 +1,7 @@
 #
 #
 
-name: Build_imm_高通410系列
+name: 🚀 Build_imm_高通410系列
 
 on:
   repository_dispatch:
@@ -64,7 +64,7 @@ jobs:
       contents: write
       actions: write
     steps:
-    - name: Checkout
+    - name: 🚀 Checkout
       uses: actions/checkout@main
 
     - name: Show hardware info
