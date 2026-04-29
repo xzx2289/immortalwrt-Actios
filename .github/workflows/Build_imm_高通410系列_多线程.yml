@@ -47,7 +47,6 @@ on:
         default: true
 
 env:
-  REPO_URL: https://github.com/${{ github.event.inputs.upstream }}
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: ${{ format('config/{0}.config', github.event.inputs.profile) }}
@@ -94,7 +93,7 @@ jobs:
       - name: 克隆 ImmortalWrt 仓库 (Clone ImmortalWrt repo)
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.REPO_URL }}
+          repository: ${{ github.event.inputs.upstream }}
           ref: ${{ env.REPO_BRANCH }}
           path: openwrt
 
