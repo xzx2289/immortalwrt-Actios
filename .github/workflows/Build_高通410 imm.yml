@@ -39,7 +39,7 @@ on:
         default: lkiuyu/immortalwrt
         required: true
       custom_hash:
-        description: ' ↓ 指定hash（默认不要填写 upstream_history.txt）↓ '
+        description: ' ↓ 指定hash（默认不用填写）↓ '
         required: false
         default: ''
         type: string
