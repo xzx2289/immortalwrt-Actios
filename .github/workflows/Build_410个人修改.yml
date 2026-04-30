@@ -142,46 +142,13 @@ jobs:
 
           cd "$GITHUB_WORKSPACE/openwrt"
 
-          echo "===== Force patch MSM8916 DTS: disable MPSS/modem reserved memory ====="
-          if [ -f "$GITHUB_WORKSPACE/scripts/patches/disable-msm8916-modem.py" ]; then
-            python3 "$GITHUB_WORKSPACE/scripts/patches/disable-msm8916-modem.py" \
-              target/linux/msm89xx/dts/msm8916.dtsi
+          echo "===== DTS check after diy-part1.sh: mpss/rmtfs/wcnss ====="
+          if [ -f target/linux/msm89xx/dts/msm8916.dtsi ]; then
+            grep -nA16 -B4 'mpss_mem: mpss@86800000' target/linux/msm89xx/dts/msm8916.dtsi || true
+            grep -nE 'rmtfs@86700000|wcnss_mem|wcnss:' target/linux/msm89xx/dts/msm8916.dtsi || true
           else
-            python3 <<'PY'
-          from pathlib import Path
-          import re
-          import sys
-
-          path = Path("target/linux/msm89xx/dts/msm8916.dtsi")
-          if not path.exists():
-              sys.exit("ERROR: target/linux/msm89xx/dts/msm8916.dtsi not found")
-
-          text = path.read_text()
-
-          mpss_pattern = r'mpss_mem:\s*mpss@86800000\s*\{.*?\};'
-          mpss_replacement = '''mpss_mem: mpss@86800000 {
-                  reg = <0x0 0x86800000 0x0 0x0>;
-                  status = "disabled";
-              };'''
-          text, mpss_count = re.subn(mpss_pattern, mpss_replacement, text, count=1, flags=re.S)
-
-          rmtfs_pattern = r'rmtfs@86700000\s*\{.*?\};'
-          rmtfs_replacement = '''rmtfs@86700000 {
-                  reg = <0x0 0x86700000 0x0 0x0>;
-                  status = "disabled";
-              };'''
-          text, rmtfs_count = re.subn(rmtfs_pattern, rmtfs_replacement, text, count=1, flags=re.S)
-
-          path.write_text(text)
-          print(f"patched mpss_mem={mpss_count}, rmtfs={rmtfs_count}")
-
-          if mpss_count != 1:
-              sys.exit("ERROR: failed to patch mpss_mem")
-          PY
+            echo "WARNING: target/linux/msm89xx/dts/msm8916.dtsi not found after diy-part1.sh"
           fi
-
-          echo "===== DTS check: mpss/rmtfs/wcnss ====="
-          grep -nE 'mpss@86800000|rmtfs@86700000|wcnss_mem|wcnss:' target/linux/msm89xx/dts/msm8916.dtsi || true
 
       - name: Update feeds
         run: |
