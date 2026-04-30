@@ -4,13 +4,12 @@ set -euo pipefail
 # OpenWrt DIY script part 1
 # Purpose:
 #   Disable MSM8916 MPSS/modem reserved memory at DTS level.
-#   This patches both the common msm8916.dtsi and device override DTSI files
-#   such as msm8916-ufi.dtsi / msm8916-mifi.dtsi.
+#   This patches both common msm8916.dtsi and board override DTS/DTSI files.
 #
 # Important:
 #   This script must run inside the OpenWrt source directory before make defconfig.
 
-echo "===== DIY PART1: no-modem DTS patch for MSM8916 ====="
+ echo "===== DIY PART1: no-modem DTS patch for MSM8916 ====="
 
 OPENWRT_DIR="${OPENWRT_DIR:-$(pwd)}"
 DTS_DIR="$OPENWRT_DIR/target/linux/msm89xx/dts"
@@ -42,6 +41,22 @@ targets = sorted(dts_dir.glob("msm8916*.dts*"))
 if not targets:
     raise SystemExit(f"ERROR: no msm8916*.dts* files found under {dts_dir}")
 
+HEX_ZERO = r"0x0+"
+MPSS_ADDR_RE = r"0x0*86800000"
+MPSS_SIZE_RE = r"0x0*5500000"
+
+
+def find_block_end(lines: list[str], start: int) -> int:
+    brace_delta = lines[start].count("{") - lines[start].count("}")
+    j = start + 1
+    while j < len(lines):
+        brace_delta += lines[j].count("{") - lines[j].count("}")
+        if brace_delta <= 0 and "};" in lines[j]:
+            return j
+        j += 1
+    return start
+
+
 def replace_blocks(text: str, start_regex: str, replacement: str) -> tuple[str, int]:
     lines = text.splitlines(keepends=True)
     out: list[str] = []
@@ -51,25 +66,13 @@ def replace_blocks(text: str, start_regex: str, replacement: str) -> tuple[str, 
 
     while i < len(lines):
         line = lines[i]
-
         if start_re.search(line):
-            brace_delta = line.count("{") - line.count("}")
-            j = i + 1
-
-            while j < len(lines):
-                brace_delta += lines[j].count("{") - lines[j].count("}")
-                if brace_delta <= 0 and "};" in lines[j]:
-                    break
-                j += 1
-
+            j = find_block_end(lines, i)
             indent = re.match(r"^(\s*)", line).group(1)
 
             out.append(line)
             for body_line in replacement.splitlines():
-                if body_line:
-                    out.append(f"{indent}\t{body_line}\n")
-                else:
-                    out.append("\n")
+                out.append(f"{indent}\t{body_line}\n")
             out.append(f"{indent}}};\n")
 
             i = j + 1
@@ -80,6 +83,45 @@ def replace_blocks(text: str, start_regex: str, replacement: str) -> tuple[str, 
         i += 1
 
     return "".join(out), count
+
+
+def patch_blocks_containing_mpss_reg(text: str) -> tuple[str, int]:
+    """
+    Catch board-specific overrides such as:
+      &{/reserved-memory/mpss@86800000} { reg = <0x00 0x86800000 0x00 0x5500000>; ... };
+    or any other block that contains a reg for MPSS address 0x86800000 with size 0x5500000.
+    """
+    lines = text.splitlines(keepends=True)
+    out: list[str] = []
+    i = 0
+    count = 0
+    mpss_reg_re = re.compile(
+        rf"reg\s*=\s*<\s*{HEX_ZERO}\s+{MPSS_ADDR_RE}\s+{HEX_ZERO}\s+{MPSS_SIZE_RE}\s*>\s*;"
+    )
+
+    while i < len(lines):
+        line = lines[i]
+        if "{" in line:
+            j = find_block_end(lines, i)
+            block = "".join(lines[i:j + 1])
+            if mpss_reg_re.search(block):
+                indent = re.match(r"^(\s*)", line).group(1)
+                out.append(line)
+                out.append(f"{indent}\t/* MPSS/modem memory disabled by no-modem build. */\n")
+                out.append(f"{indent}\treg = <0x0 0x86800000 0x0 0x0>;\n")
+                if "no-map" in block:
+                    out.append(f"{indent}\tno-map;\n")
+                out.append(f"{indent}\tstatus = \"disabled\";\n")
+                out.append(f"{indent}}};\n")
+                i = j + 1
+                count += 1
+                continue
+
+        out.append(line)
+        i += 1
+
+    return "".join(out), count
+
 
 def patch_file(path: Path) -> tuple[bool, dict[str, int]]:
     text = path.read_text(encoding="utf-8", errors="ignore")
@@ -103,6 +145,10 @@ def patch_file(path: Path) -> tuple[bool, dict[str, int]]:
         'status = "disabled";'
     )
     stats["mpss_mem_ref"] = n
+
+    # Generic board override: catches mf601 style path overrides and any syntax variant using 0x00.
+    text, n = patch_blocks_containing_mpss_reg(text)
+    stats["mpss_reg_block"] = n
 
     text, n = replace_blocks(
         text,
@@ -170,34 +216,26 @@ def patch_file(path: Path) -> tuple[bool, dict[str, int]]:
 
     return False, stats
 
-changed_any = False
 
 for path in targets:
     changed, stats = patch_file(path)
     total = sum(stats.values())
 
     if changed:
-        changed_any = True
         print(f"PATCHED: {path.relative_to(openwrt)} blocks={total} {stats}")
     elif total:
         print(f"CHECKED: {path.relative_to(openwrt)} blocks={total} no write needed")
     else:
         print(f"NOCHANGE: {path.relative_to(openwrt)}")
 
-bad_patterns = [
-    "0x5500000",
-    "0x05500000",
-]
-
+bad_re = re.compile(r"0x0*86800000\s+0x0+\s+0x0*5500000")
 bad_hits: list[str] = []
 
 for path in targets:
     data = path.read_text(encoding="utf-8", errors="ignore")
-    for pat in bad_patterns:
-        if pat in data:
-            for idx, line in enumerate(data.splitlines(), 1):
-                if pat in line:
-                    bad_hits.append(f"{path.relative_to(openwrt)}:{idx}: {line.strip()}")
+    for idx, line in enumerate(data.splitlines(), 1):
+        if bad_re.search(line):
+            bad_hits.append(f"{path.relative_to(openwrt)}:{idx}: {line.strip()}")
 
 if bad_hits:
     print("ERROR: non-zero MPSS/modem memory size still exists:")
@@ -211,6 +249,7 @@ for p in [
     dts_dir / "msm8916-ufi.dtsi",
     dts_dir / "msm8916-mifi.dtsi",
     dts_dir / "msm8916-sp970.dtsi",
+    dts_dir / "msm8916-ufi-mf601.dts",
 ]:
     if not p.exists():
         continue
@@ -225,6 +264,8 @@ for p in [
             or "&mpss" in line
             or "&bam_dmux" in line
             or "0x86800000" in line
+            or "0x5500000" in line
+            or "0x05500000" in line
         ):
             print(f"{idx}: {line}")
 
