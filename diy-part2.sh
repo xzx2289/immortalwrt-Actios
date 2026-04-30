@@ -1,58 +1,16 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+set -e
 
 echo "===== DIY PART2: remove MSM8916 modem/baseband packages ====="
 
-if [ ! -f .config ]; then
-    echo "ERROR: .config not found."
-    echo "Make sure workflow has copied config/<profile>.config to openwrt/.config before running diy-part2.sh"
-    exit 1
-fi
-
-echo "===== Replace default LuCI theme if possible ====="
+# 默认主题
 sed -i 's/luci-theme-material/luci-theme-argon/g' feeds/luci/collections/luci/Makefile 2>/dev/null || true
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile 2>/dev/null || true
 
-echo "===== Remove SMS/modem related package source directories ====="
-rm -rf package/DbusSmsForwardCPlus 2>/dev/null || true
-rm -rf package/feeds/*/DbusSmsForwardCPlus 2>/dev/null || true
-rm -rf package/feeds/*/luci-app-dbus-sms-forward 2>/dev/null || true
-rm -rf package/feeds/*/luci-app-sms-tool 2>/dev/null || true
-rm -rf package/feeds/*/sms-tool 2>/dev/null || true
+# 删除 SMS/modem 相关包目录，防止被 feeds 重新选中
+rm -rf package/DbusSmsForwardCPlus package/feeds/*/DbusSmsForwardCPlus 2>/dev/null || true
 
-rm -rf package/feeds/*/modemmanager 2>/dev/null || true
-rm -rf package/feeds/*/modemmanager-rpcd 2>/dev/null || true
-rm -rf package/feeds/*/luci-app-modemmanager 2>/dev/null || true
-rm -rf package/feeds/*/luci-proto-modemmanager 2>/dev/null || true
-
-rm -rf package/feeds/*/uqmi 2>/dev/null || true
-rm -rf package/feeds/*/umbim 2>/dev/null || true
-rm -rf package/feeds/*/qmi-utils 2>/dev/null || true
-rm -rf package/feeds/*/mbim-utils 2>/dev/null || true
-rm -rf package/feeds/*/libqmi 2>/dev/null || true
-rm -rf package/feeds/*/libmbim 2>/dev/null || true
-rm -rf package/feeds/*/luci-proto-qmi 2>/dev/null || true
-rm -rf package/feeds/*/luci-proto-mbim 2>/dev/null || true
-
-rm -rf package/feeds/*/rmtfs 2>/dev/null || true
-rm -rf package/feeds/*/qmi-modem-410-init 2>/dev/null || true
-
-disable_pkg() {
-    local p="$1"
-
-    sed -i \
-        -e "/^CONFIG_PACKAGE_${p}=.*/d" \
-        -e "/^# CONFIG_PACKAGE_${p} is not set/d" \
-        -e "/^CONFIG_DEFAULT_${p}=.*/d" \
-        -e "/^# CONFIG_DEFAULT_${p} is not set/d" \
-        .config 2>/dev/null || true
-
-    printf '# CONFIG_PACKAGE_%s is not set\n' "$p" >> .config
-    printf '# CONFIG_DEFAULT_%s is not set\n' "$p" >> .config
-}
-
-echo "===== Disable fixed modem/baseband package list ====="
-
+# 这些是 cellular/baseband/modem/QMI/MBIM/WWAN 相关包
 DISABLE_PKGS="
 kmod-qcom-rproc-modem
 kmod-rpmsg-wwan-ctrl
@@ -66,7 +24,6 @@ luci-proto-modemmanager
 libqmi
 libqmi-glib
 qmi-utils
-qmi-utils-json
 uqmi
 luci-proto-qmi
 libmbim
@@ -96,26 +53,34 @@ kmod-usb-serial-wwan
 kmod-usb-wdm
 "
 
+disable_pkg() {
+    local p="$1"
+
+    sed -i "/^CONFIG_PACKAGE_${p}=/d" .config 2>/dev/null || true
+    sed -i "/^# CONFIG_PACKAGE_${p} is not set/d" .config 2>/dev/null || true
+    sed -i "/^CONFIG_DEFAULT_${p}=/d" .config 2>/dev/null || true
+    sed -i "/^# CONFIG_DEFAULT_${p} is not set/d" .config 2>/dev/null || true
+
+    echo "# CONFIG_PACKAGE_${p} is not set" >> .config
+    echo "# CONFIG_DEFAULT_${p} is not set" >> .config
+}
+
 for p in $DISABLE_PKGS; do
     disable_pkg "$p"
 done
 
-echo "===== Auto-disable modem firmware/packages already found in .config ====="
+# 自动禁用所有 openstick modem firmware
+MODEM_FW_SYMBOLS="$(grep -E '^CONFIG_(PACKAGE|DEFAULT)_qcom-msm8916-modem-openstick-.*-firmware=y' .config 2>/dev/null \
+    | sed -E 's/^CONFIG_(PACKAGE|DEFAULT)_//' \
+    | sed -E 's/=y$//' \
+    | sort -u || true)"
 
-AUTO_DISABLE_SYMBOLS="$(
-    grep -E '^CONFIG_(PACKAGE|DEFAULT)_(qcom-msm8916-modem-openstick-.*-firmware|.*modem.*firmware|.*modem.*|.*qmi.*|.*mbim.*|.*wwan.*|.*rmtfs.*|.*bam-dmux.*)=(y|m)' .config 2>/dev/null \
-        | sed -E 's/^CONFIG_(PACKAGE|DEFAULT)_//' \
-        | sed -E 's/=(y|m)$//' \
-        | sort -u || true
-)"
-
-for p in $AUTO_DISABLE_SYMBOLS; do
-    echo "Disable auto-detected modem/baseband package: $p"
+for p in $MODEM_FW_SYMBOLS; do
+    echo "Disable modem firmware: $p"
     disable_pkg "$p"
 done
 
-echo "===== Disable known OpenStick MSM8916 modem firmware packages ====="
-
+# 兜底：明确禁用所有已知 410/OpenStick modem firmware
 for p in \
 qcom-msm8916-modem-openstick-ufi003-firmware \
 qcom-msm8916-modem-openstick-ufi001c-firmware \
@@ -134,30 +99,21 @@ do
     disable_pkg "$p"
 done
 
-echo "===== Keep Wi-Fi/WCNSS packages ====="
-
+# 必须保留 Wi-Fi/WCNSS，不能删
 KEEP_WIFI_PKGS="
 kmod-rproc-wcnss
 kmod-wcn36xx
+wpad-basic-wolfssl
 "
 
 for p in $KEEP_WIFI_PKGS; do
-    sed -i \
-        -e "/^CONFIG_PACKAGE_${p}=.*/d" \
-        -e "/^# CONFIG_PACKAGE_${p} is not set/d" \
-        .config 2>/dev/null || true
-
-    printf 'CONFIG_PACKAGE_%s=y\n' "$p" >> .config
+    sed -i "/^# CONFIG_PACKAGE_${p} is not set/d" .config 2>/dev/null || true
+    sed -i "/^CONFIG_PACKAGE_${p}=/d" .config 2>/dev/null || true
+    echo "CONFIG_PACKAGE_${p}=y" >> .config
 done
 
-# Do not force-disable wpad. Keep whatever OpenWrt selected.
-sed -i '/^# CONFIG_PACKAGE_wpad-basic/d' .config 2>/dev/null || true
-sed -i '/^# CONFIG_PACKAGE_wpad-basic-wolfssl/d' .config 2>/dev/null || true
+echo "===== Keep Wi-Fi/WCNSS related entries ====="
+grep -Ei 'wcnss|wcn36xx|rproc-wcnss|wpad-basic' .config || true
 
-echo "===== Final Wi-Fi/WCNSS entries ====="
-grep -Ei 'wcnss|wcn36xx|wpad-basic' .config || true
-
-echo "===== Final modem/baseband related entries after cleanup ====="
+echo "===== Disabled modem/baseband related entries ====="
 grep -Ei 'modem|qmi|mbim|wwan|qrtr|bam-dmux|rmtfs|sms|DbusSms' .config || true
-
-echo "===== DIY PART2 done ====="
