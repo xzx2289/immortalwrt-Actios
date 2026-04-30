@@ -39,7 +39,7 @@ on:
         default: lkiuyu/immortalwrt
         required: true
       custom_hash:
-        description: ' ↓ 指定custom_hash（默认不用填写）↓ '
+        description: ' ↓ 指定 hash（默认不用填写）↓ '
         required: false
         default: ''
         type: string
