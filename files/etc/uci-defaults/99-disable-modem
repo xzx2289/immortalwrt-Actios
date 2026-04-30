@@ -1,1 +1,12 @@
+#!/bin/sh
+# Runtime guard: 固件启动后兜底停掉可能残留的 modem 相关服务。
+# 这不是释放内存的主方法；真正释放内存靠 DTS patch。
 
+for s in rmtfs modemmanager qmi-proxy uqmi umbim sms_tool dbus-sms-forward; do
+    if [ -x "/etc/init.d/$s" ]; then
+        /etc/init.d/$s stop 2>/dev/null || true
+        /etc/init.d/$s disable 2>/dev/null || true
+    fi
+done
+
+exit 0
