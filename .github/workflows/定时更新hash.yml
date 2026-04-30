@@ -1,4 +1,4 @@
-name: 🔒 每3天验证更新custom_hash
+name: 🔒 每3天验证更新 hash
 
 on:
   schedule:
@@ -165,9 +165,13 @@ jobs:
           git fetch origin main
           git reset --hard origin/main
           echo "$NEW_HASH" > upstream_lock.txt
-          # 确保文件末尾有换行再追加
-          [ -f upstream_history.txt ] && [ -n "$(tail -c1 upstream_history.txt)" ] && echo "" >> upstream_history.txt
-          echo "$(date '+%Y-%m-%d') $NEW_HASH" >> upstream_history.txt
+          # 新记录插入文件最前面
+          NEW_LINE="$(date '+%Y-%m-%d') $NEW_HASH"
+          if [ -f upstream_history.txt ]; then
+            echo -e "$NEW_LINE\n$(cat upstream_history.txt)" > upstream_history.txt
+          else
+            echo "$NEW_LINE" > upstream_history.txt
+          fi
           git add upstream_lock.txt upstream_history.txt
           git commit -m "🔒 更新上游锁定 hash: ${NEW_HASH:0:7} [skip ci]"
           git push
