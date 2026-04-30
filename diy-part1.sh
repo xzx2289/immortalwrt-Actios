@@ -1,26 +1,38 @@
-#!/bin/bash
-# DIY脚本
-# https://github.com/P3TERX/Actions-OpenWrt
-# 文件名: diy-part1.sh
-# 功能说明: OpenWrt DIY脚本第1部分（更新feeds之前）
-# 版权: (c) 2019-2024 P3TERX <https://p3terx.com>
-# 基于 MIT 开源协议，详见 /LICENSE
+#!/usr/bin/env bash
+set -euo pipefail
 
-# 取消注释一个源
-# sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
+# OpenWrt DIY script part 1
+# 执行时机：clone OpenWrt 源码之后、feeds update 之前。
+# 目标：修改 MSM8916/骁龙410 DTS，禁用 MPSS/modem 预留内存，避免基带启动。
 
-# 添加第三方 feed 源（small-package 包含 openclash/passwall/ssr-plus 等常用插件）
-# echo 'src-git smpackage https://github.com/kenzok8/small-package' >> feeds.conf.default
+ROOT="${GITHUB_WORKSPACE:-$(pwd)}"
+OPENWRT_DIR="$(pwd)"
+PATCHER="$ROOT/scripts/patches/disable-msm8916-modem.py"
 
+echo "===== DIY PART1: no-modem DTS patch for MSM8916 ====="
+echo "GITHUB_WORKSPACE=$ROOT"
+echo "OPENWRT_DIR=$OPENWRT_DIR"
 
-# OpenClash代理
-# git clone --depth 1 https://github.com/vernesong/OpenClash.git OpenClash
+# 你原项目里已有的 openstick feeds 替换逻辑，保留。
+sed -i 's|src-git-full openstick https://github.com/lkiuyu/openstick-feeds.git|src-git-full openstick https://github.com/xuxin1955/openstick-feeds|g' feeds.conf.default 2>/dev/null || true
 
-# turboacc网络加速
-# curl -sSL https://raw.githubusercontent.com/mufeng05/turboacc/main/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
+if [ ! -f "$PATCHER" ]; then
+    echo "ERROR: patcher not found: $PATCHER"
+    echo "请确认仓库里存在 scripts/patches/disable-msm8916-modem.py"
+    exit 1
+fi
 
-# 调试
-# sed -i 's|src-git-full openstick https://github.com/lkiuyu/openstick-feeds.git|src-git-full openstick https://github.com/xuxin1955/openstick-feeds|g' feeds.conf.default
+python3 "$PATCHER" "$OPENWRT_DIR"
 
+echo "===== DTS patch result ====="
+for f in \
+    target/linux/msm89xx/dts/msm8916.dtsi \
+    target/linux/*/dts/msm8916.dtsi
+ do
+    [ -f "$f" ] || continue
+    echo "--- $f ---"
+    grep -nA16 -B6 'mpss_mem: mpss@86800000' "$f" || true
+    grep -nA12 -B4 'qcom,msm8916-mss-pil\|qcom,msm8916-mss-pas' "$f" || true
+ done
 
-
+echo "===== DIY PART1 done ====="
