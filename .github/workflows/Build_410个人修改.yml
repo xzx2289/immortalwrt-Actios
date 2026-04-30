@@ -37,7 +37,7 @@ name: Build_imm_高通410系列_个人修改_no_modem
         default: lkiuyu/immortalwrt
         required: true
       extra_packages:
-        description: '额外包名，逗号或空格分隔；不要填 modem/qmi/mbim/wwan/rmtfs 相关包'
+        description: '额外包名，逗号或空格分隔；不要填 modem/qmi/mbim/wwan/rmtfs 相关包，本版本已经去除基带'
         required: false
         default: ''
         type: string
